@@ -10,7 +10,7 @@ public class PhysicsObject : MonoBehaviour, IHealthable
     private Animator animator;
     private Animator attackAnimator;
     public Quaternion forceMultiplier = new Quaternion(0.5f, 0.5f, 0.5f, 0.5f);
-    private int healthInPercents = 100;
+    public int healthInPercents = 100;
     
     private void Start()
     {
@@ -53,15 +53,19 @@ public class PhysicsObject : MonoBehaviour, IHealthable
         {
             if (GameObject.FindGameObjectsWithTag("Enemies").Length > 0)
             {
-                attackAnimator.CrossFade("SwordFight", 2.0f);
+                attackAnimator.CrossFade("SwordFight", 1.0f);
                 attack( GameObject.FindGameObjectsWithTag("Enemies") );   
             }
             else
             {
-                attackAnimator.CrossFade("SwordFight", 2.0f);
+                attackAnimator.CrossFade("SwordFight", 0.5f);
             }
         }
-        
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            transform.rotation = new Quaternion(0, 0, 0, 0);
+        }
     }
 
     private void attack(GameObject[] enemies)
@@ -113,5 +117,10 @@ public class PhysicsObject : MonoBehaviour, IHealthable
     public void kill()
     {
         Destroy(gameObject);
+    }
+
+    public int getHealth()
+    {
+        return healthInPercents;
     }
 }

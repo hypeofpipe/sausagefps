@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour, IHealthable
 	void Update ()
 	{
 		walk();
+		attack(GameObject.FindGameObjectsWithTag("Hero"));
 	}
 
 	private void walk()
@@ -33,6 +34,27 @@ public class Enemy : MonoBehaviour, IHealthable
 		transform.Translate(
 			endVector * multiplier
 			);
+	}
+
+	private void attack(GameObject[] enemies)
+	{
+		GameObject closest = null;
+		float distance = 10f;
+		Vector3 position = transform.position;
+		foreach (GameObject go in enemies) {
+			Vector3 diff = go.transform.position - position;
+			float curDistance = diff.sqrMagnitude;
+			if (curDistance < distance) {
+				closest = go;
+				distance = curDistance;
+			}
+		}
+
+		if (closest != null)
+		{
+			closest.GetComponent<PhysicsObject>().reduceHealth(20);
+			closest.GetComponent<Rigidbody2D>().AddForce(new Vector2(-10f, 0f), ForceMode2D.Impulse);
+		}
 	}
 
 	public void reduceHealth(int amountInPercents)

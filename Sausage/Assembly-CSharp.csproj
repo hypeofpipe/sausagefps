@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\HeroAnimation.cs" />
+    <Compile Include="Assets\Scripts\HUD.cs" />
     <Compile Include="Assets\Scripts\IHealthable.cs" />
     <Compile Include="Assets\Scripts\JumpEvent.cs" />
     <Compile Include="Assets\Scripts\PhysicsObject.cs" />

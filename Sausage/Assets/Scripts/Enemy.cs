@@ -13,9 +13,13 @@ public class Enemy : MonoBehaviour, IHealthable
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	void FixedUpdate ()
 	{
 		walk();
+	}
+
+	private void OnCollisionEnter2D(Collision2D other)
+	{
 		attack(GameObject.FindGameObjectsWithTag("Hero"));
 	}
 
@@ -39,7 +43,7 @@ public class Enemy : MonoBehaviour, IHealthable
 	private void attack(GameObject[] enemies)
 	{
 		GameObject closest = null;
-		float distance = 10f;
+		float distance = 5f;
 		Vector3 position = transform.position;
 		foreach (GameObject go in enemies) {
 			Vector3 diff = go.transform.position - position;
@@ -52,8 +56,8 @@ public class Enemy : MonoBehaviour, IHealthable
 
 		if (closest != null)
 		{
-			closest.GetComponent<PhysicsObject>().reduceHealth(20);
-			closest.GetComponent<Rigidbody2D>().AddForce(new Vector2(-10f, 0f), ForceMode2D.Impulse);
+			closest.GetComponentInChildren<PhysicsObject>().reduceHealth(30);
+			closest.GetComponentInChildren<Rigidbody2D>().AddForce(new Vector2(-20f, 10f), ForceMode2D.Impulse);
 		}
 	}
 

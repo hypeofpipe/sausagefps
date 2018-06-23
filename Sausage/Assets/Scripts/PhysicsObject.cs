@@ -33,7 +33,7 @@ public class PhysicsObject : MonoBehaviour, IHealthable
         {
             foreach (var o in GetComponentsInChildren<Transform>())
             {
-                transform.localScale = (new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z));
+                transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
             }
             animator.CrossFade("BodyAnim", 2.0f);
             rb.AddForce(new Vector2(-1, 0) * forceMultiplier.z, ForceMode2D.Impulse);

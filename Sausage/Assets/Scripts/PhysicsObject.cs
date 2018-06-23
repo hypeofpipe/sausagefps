@@ -7,38 +7,58 @@ using UnityEngine;
 public class PhysicsObject : MonoBehaviour, IHealthable
 {
     private Rigidbody2D rb;
-    public float forceMultiplier = 0.5f;
+    private Animator animator;
+    private Animator attackAnimator;
+    public Quaternion forceMultiplier = new Quaternion(0.5f, 0.5f, 0.5f, 0.5f);
     private int healthInPercents = 100;
     
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponentInChildren<Animator>();
+        attackAnimator = GameObject.Find("Attack").GetComponent<Animator>();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-          changePosition(Vector2.up, forceMultiplier);
+            rb.AddForce(Vector2.up * forceMultiplier.x, ForceMode2D.Impulse);
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            changePosition(Vector2.down, forceMultiplier);  
+            rb.AddForce(Vector2.down * forceMultiplier.y, ForceMode2D.Impulse); 
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
-            changePosition(Vector2.left, forceMultiplier);
+            foreach (var o in GetComponentsInChildren<Transform>())
+            {
+                transform.localScale = (new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z));
+            }
+            animator.CrossFade("BodyAnim", 2.0f);
+            rb.AddForce(new Vector2(-1, 0) * forceMultiplier.z, ForceMode2D.Impulse);
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
-            changePosition(Vector2.right, forceMultiplier);
+            foreach (var renderer in GetComponentsInChildren<SpriteRenderer>())
+            {
+                renderer.flipX = true;
+            }
+
+            animator.CrossFade("BodyAnim", 2.0f);
+            rb.AddForce(new Vector2(1, 0) * forceMultiplier.w, ForceMode2D.Impulse);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (GameObject.FindGameObjectsWithTag("Enemies").Length > 0)
             {
+                attackAnimator.CrossFade("SwordFight", 2.0f);
                 attack( GameObject.FindGameObjectsWithTag("Enemies") );   
+            }
+            else
+            {
+                attackAnimator.CrossFade("SwordFight", 2.0f);
             }
         }
         
@@ -67,7 +87,7 @@ public class PhysicsObject : MonoBehaviour, IHealthable
 
     private void changePosition(Vector2 direction, float multiplier)
     {
-        rb.AddForce(direction * multiplier, ForceMode2D.Impulse);
+        GetComponent<Transform>().Translate(new Vector3(direction.x, direction.y, 0) * multiplier);
     }
 
     public void reduceHealth(int amountInPercents)
